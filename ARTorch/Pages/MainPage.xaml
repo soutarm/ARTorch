@@ -1,0 +1,119 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="ARTorch.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    
+    xmlns:local="clr-namespace:ARTorch.Classes"
+    
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <phone:PhoneApplicationPage.Resources>
+        <local:AppSettings x:Key="appSettings"></local:AppSettings>
+    </phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent" VerticalAlignment="Bottom">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="243" />
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Name="SettingsView" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2" Margin="0" Height="800" VerticalAlignment="Top" Canvas.ZIndex="8">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="{StaticResource PhoneBackgroundColor}" Offset="0"/>
+                    <GradientStop Offset="1"/>
+                    <GradientStop Color="{StaticResource PhoneBackgroundColor}" Offset="0.439"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+
+            <TextBlock Text="Settings" Margin="9,0,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+
+            <CheckBox Content="Light on when app starts" Height="Auto" HorizontalAlignment="Left" Margin="60,0,0,0" Name="torchInitStateSetting" VerticalAlignment="Top"
+            IsChecked="{Binding Source={StaticResource appSettings}, Path=TorchInitStateSetting, Mode=TwoWay}"  />
+
+            <CheckBox Content="Operate under lock screen" Height="Auto" HorizontalAlignment="Left" Margin="60,-20,0,0" Name="operateUnderLockscreenSetting" VerticalAlignment="Top"
+            IsChecked="{Binding Source={StaticResource appSettings}, Path=OperateUnderLockscreenSetting, Mode=TwoWay}"  />
+
+            <CheckBox Content="Enable sounds" Height="Auto" HorizontalAlignment="Left" Margin="60,-20,0,0" Name="enableSoundSetting" VerticalAlignment="Top"
+            IsChecked="{Binding Source={StaticResource appSettings}, Path=EnableSoundSetting, Mode=TwoWay}"  />
+
+            <CheckBox Content="Enable vibration" Height="Auto" HorizontalAlignment="Left" Margin="60,-20,0,0" Name="enableVibrateSetting" VerticalAlignment="Top"
+            IsChecked="{Binding Source={StaticResource appSettings}, Path=EnableVibrateSetting, Mode=TwoWay}"  />
+
+            <CheckBox Content="Enable hardware camera button" Height="Auto" HorizontalAlignment="Left" Margin="60,-20,0,0" Name="enableHardwareButtonSetting" VerticalAlignment="Top"
+            IsChecked="{Binding Source={StaticResource appSettings}, Path=EnableHardwareButtonSetting, Mode=TwoWay}"  />
+
+            <Button Name="ContactDev" Click="ContactDev_Click" HorizontalAlignment="Left" Margin="40,0,0,0" Width="200" Height="80" Content="Feedback" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" />
+            <Button Name="RateApp" Click="RateApp_Click"  Margin="0,-80,40,0" Width="200" HorizontalAlignment="Right" Height="80" Content="Rate App" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" />
+          
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Canvas.ZIndex="2" Grid.RowSpan="2" Height="800" VerticalAlignment="Top">
+            <Rectangle Name="BatteryBorder" Width="52" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="9,9,0,0" Stroke="{StaticResource PhoneForegroundBrush}" Canvas.ZIndex="2" >
+            </Rectangle>
+
+            <Rectangle Name="BatteryNub" Width="4" Height="12" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,-17,0,0" Fill="{StaticResource PhoneForegroundBrush}" Canvas.ZIndex="4" >
+            </Rectangle>
+
+            <TextBlock Name="BatteryPercent" Width="50" Height="20" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-21,0,0" Text="100%" FontSize="14" Canvas.ZIndex="4" Foreground="{StaticResource PhoneForegroundBrush}" >
+            </TextBlock>
+
+            <Rectangle Name="BatteryIcon" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-21,0,0" Canvas.ZIndex="3" >
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </StackPanel>
+        
+        <Canvas x:Name="viewfinderCanvas" Height="800">
+            <Canvas.Background>
+                <VideoBrush x:Name="viewfinderBrush" />
+            </Canvas.Background>
+        </Canvas>
+
+        <!--Button StackPanel to the right of viewfinder>-->
+        <StackPanel Grid.Row="1" Canvas.ZIndex="20" >
+            <Button x:Name="TorchButton" Content="" Click="TorchButton_Click" Height="256" Width="170" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" ClickMode="Press" />
+
+            <Rectangle x:Name="ToggleCameraButton" Opacity="0.5" Tap="ToggleCameraButtonTap" Width="60" Height="60" Margin="10,-83,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Canvas.ZIndex="50" Fill="{StaticResource PhoneForegroundBrush}">
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Fill" ImageSource="/Assets/images/cameraoff.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <Rectangle x:Name="ScreenGrab" Opacity="0.5" Tap="ScreenGrabTap" Width="60" Height="60" Margin="90,-83,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Canvas.ZIndex="50" Fill="{StaticResource PhoneForegroundBrush}">
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Fill" ImageSource="/Assets/images/cameraon.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <Rectangle x:Name="SettingsButton" Opacity="0.5" Tap="SettingsButtonTap" Margin="0,-83,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Canvas.ZIndex="50" Fill="{StaticResource PhoneForegroundBrush}" Width="60" Height="60" >
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Fill" ImageSource="/Assets/images/settings.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <Rectangle x:Name="SoundSelectButton" Opacity="0.5" Tap="SoundSelectButton_Tap" Margin="0,-83,90,0" VerticalAlignment="Top" HorizontalAlignment="Right" Canvas.ZIndex="50" Fill="{StaticResource PhoneForegroundBrush}" Width="60" Height="60" >
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Fill" ImageSource="/Assets/images/music.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            
+        </StackPanel>
+
+        <!--Used for debugging -->
+        <TextBlock HorizontalAlignment="Left" Name="DebugText" VerticalAlignment="Top" FontSize="12" FontWeight="ExtraLight" FontFamily="Courier New" />
+    </Grid>
+
+</phone:PhoneApplicationPage>
